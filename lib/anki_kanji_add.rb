@@ -11,6 +11,7 @@ module AnkiKanjiAdd
       @deck = []
       @deck_notes_info = []
       @model_names = []
+      @note_fields = []
     end
 
     def start
@@ -19,23 +20,29 @@ module AnkiKanjiAdd
 
       get_deck_id
 
-      get_notes_info
+      get_model_names
 
+      select_note_fields
       # updateNoteFields
       puts 'end'
     end
 
     private
 
+    def anki_connection(params)
+      res = Net::HTTP.post(@base_uri, params.to_json)
+      # TODO: Add error handling
+      JSON.parse(res.body, symbolize_names: true)[:result]
+    end
+
     def get_deck_id
       puts 'Fetching deck names from Anki'
       puts '---'
 
-      res = Net::HTTP.post(@base_uri, {action: 'deckNamesAndIds', version: 6}.to_json)
+      # res = Net::HTTP.post(@base_uri, { action: 'deckNamesAndIds', version: 6 }.to_json)
 
       puts 'Please select the deck to annotate with Kanji:'
-      # TODO: Add error handling
-      decks = JSON.parse(res.body, symbolize_names: true)[:result]
+      decks = anki_connection({ action: 'deckNamesAndIds', version: 6 })
       decks_array = decks.map { |deck| deck }
 
       decks_array.each_with_index do |(deck_name, _id), i|
@@ -54,15 +61,36 @@ module AnkiKanjiAdd
       @deck_id = decks_array[deck_index][1]
     end
 
-    def get_notes_info
+    def get_model_names
       puts 'Fetching deck notes info from Anki'
       puts '---'
 
-      res = Net::HTTP.post(@base_uri, {action: 'notesInfo', version: 6, params: { query: "deck:#{@deck[0]}"}}.to_json)
-      @deck_notes_info = JSON.parse(res.body, symbolize_names: true)[:result]
-      p @deck_notes_info[0][:modelName]
+      @deck_notes_info = anki_connection({ action: 'notesInfo', version: 6, params: { query: "deck:#{@deck[0]}" } })
       @model_names = @deck_notes_info.map { |note_info| note_info[:modelName] }.uniq
-      p @model_names
+    end
+
+    def select_note_fields
+      @model_names.each do |model_name|
+        model_field_names = anki_connection({ action: 'modelFieldNames', version: 6,
+                                              params: { modelName: model_name } })
+        model_field_names.each_with_index do |field, i|
+          puts "#{i}: #{field}"
+          puts "#{i + 1}: None" if i == model_field_names.length - 1
+        end
+
+        field_index = gets.chomp.to_i
+        while field_index < 0 || field_index > model_field_names.length
+          puts 'Number out of range, please provide valid number!'
+          puts '---'
+          field_index = gets.chomp.to_i
+        end
+        @note_fields << if field_index < model_field_names.length
+                          model_field_names[field_index]
+                        else
+                          'None'
+                        end
+      end
+      puts @note_fields
     end
   end
 end

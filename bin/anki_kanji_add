@@ -1,4 +1,6 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
+
 $LOAD_PATH.unshift File.expand_path('../lib', __dir__)
-require 'anki_kanji_add'
+require 'anki_kanji_add/cli'
 AnkiKanjiAdd::CLI.new.start

@@ -7,11 +7,10 @@ module AnkiKanjiAdd
   class CLI
     def initialize
       @base_uri = URI('http://localhost:8765')
-      @deck_id = ''
       @deck = []
       @deck_notes_info = []
-      @model_names = []
-      @note_fields = []
+      @models = {}
+      @note_id_words = {}
     end
 
     def start
@@ -23,6 +22,8 @@ module AnkiKanjiAdd
       get_model_names
 
       select_note_fields
+
+      get_kanji_texts
       # updateNoteFields
       puts 'end'
     end
@@ -38,8 +39,6 @@ module AnkiKanjiAdd
     def get_deck_id
       puts 'Fetching deck names from Anki'
       puts '---'
-
-      # res = Net::HTTP.post(@base_uri, { action: 'deckNamesAndIds', version: 6 }.to_json)
 
       puts 'Please select the deck to annotate with Kanji:'
       decks = anki_connection({ action: 'deckNamesAndIds', version: 6 })
@@ -58,7 +57,6 @@ module AnkiKanjiAdd
 
       puts "You selected #{deck_index}: #{decks_array[deck_index][0]}"
       @deck = decks_array[deck_index]
-      @deck_id = decks_array[deck_index][1]
     end
 
     def get_model_names
@@ -66,11 +64,12 @@ module AnkiKanjiAdd
       puts '---'
 
       @deck_notes_info = anki_connection({ action: 'notesInfo', version: 6, params: { query: "deck:#{@deck[0]}" } })
-      @model_names = @deck_notes_info.map { |note_info| note_info[:modelName] }.uniq
+      @deck_notes_info.map { |note_info| @models[:"#{note_info[:modelName]}"] = '' }.uniq
     end
 
     def select_note_fields
-      @model_names.each do |model_name|
+      @models.keys.each do |model_name|
+        puts "Select fields that contains text you want to parse for kanji for note type: #{model_name}"
         model_field_names = anki_connection({ action: 'modelFieldNames', version: 6,
                                               params: { modelName: model_name } })
         model_field_names.each_with_index do |field, i|
@@ -84,13 +83,38 @@ module AnkiKanjiAdd
           puts '---'
           field_index = gets.chomp.to_i
         end
-        @note_fields << if field_index < model_field_names.length
+        @models[model_name] = if field_index < model_field_names.length
                           model_field_names[field_index]
                         else
                           'None'
                         end
+        puts '---'
       end
-      puts @note_fields
+      puts "You've selected the following note fields"
+      @models.each do |(model_name, field_name)|
+        puts "#{model_name}: #{field_name}"
+      end
+    end
+
+    def get_kanji_texts
+      @deck_notes_info.map do |note_info|
+        
+        id          = note_info[:noteId]
+        puts "id", id
+        model       = note_info[:modelName]
+        puts "model", model
+        byebug
+        source_field= @models[ model ]
+        puts "source_field", source_field
+        field_hash  = note_info[:fields][ source_field ]
+        puts "field_hash", field_hash
+
+        @note_id_words[ id ] = field_hash[:value]
+        # puts note_info
+        # puts note_info[:noteId]
+        # @note_id_words[:note_info[:noteId].to_sym] = note_info[:fields][:models[:note_info[:modelName].to_sym].to_sym]
+      end
+      puts @note_id_words
     end
   end
 end

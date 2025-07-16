@@ -16,6 +16,7 @@ module AnkiKanjiAdd
       index = select_deck_index(decks_array)
       name, id = decks_array[index]
       puts "Selected deck: #{name}"
+      puts '------------------------------'
       Deck.new(name, id)
     end
 
@@ -23,7 +24,7 @@ module AnkiKanjiAdd
       index = gets.chomp.to_i
       while index.negative? || index > decks_array.length - 1
         puts 'Number out of range, please provide valid number!'
-        puts '---'
+        puts '------------------------------'
         index = gets.chomp.to_i
       end
       index

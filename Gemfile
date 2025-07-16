@@ -4,3 +4,4 @@ source 'https://rubygems.org'
 
 gem 'rubocop', '~> 1.77', require: false
 gem 'rubocop-rspec', '~> 3.0'
+gem 'ruby-progressbar'

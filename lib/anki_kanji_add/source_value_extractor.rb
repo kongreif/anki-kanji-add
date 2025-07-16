@@ -17,7 +17,9 @@ module AnkiKanjiAdd
         source_field = @model_field_map[model]
         source = note[:fields][source_field.to_sym]
 
-        @note_source_maps << NoteSourceMap.new(id, source, nil)
+        next if source_field == 'None'
+
+        @note_source_maps << NoteSourceMap.new(id, source, nil) if source[:value].chars.grep(/\p{han}/).any?
       end
       @note_source_maps
     end

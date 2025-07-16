@@ -13,6 +13,7 @@ module AnkiKanjiAdd
     def choose
       @models.each do |model|
         puts "Select fields that contains text you want to parse for kanji for note type: #{model}"
+        puts
         fields = @anki.model_field_names(model)
         print_fields(fields)
         index = select_field_index(fields)
@@ -32,9 +33,10 @@ module AnkiKanjiAdd
       index = gets.chomp.to_i
       while index.negative? || index > fields.length
         puts 'Number out of range, please provide valid number!'
-        puts '---'
+        puts '------------------------------'
         index = gets.chomp.to_i
       end
+      puts '------------------------------'
       index
     end
 

@@ -2,7 +2,7 @@
 AnkiKanjiAdd is a command line tool to annotate all of your japanese Anki notes with the respective Kanji and their meaning. It does so by
 1. Letting you select which deck you want to backfill
 2. Letting you decide which field of which note type contains the target word you want to base the kanji information on
-3. Parsing the respective kanji information from an excerpt of the [KANJIDIC](http://www.edrdg.org/wiki/index.php/KANJIDIC_Project) dictionary of the [Electronic Dictionary Research and Development Group (EDRDG)](https://www.edrdg.org/)
+3. Parsing the respective kanji information from an excerpt of the [KANJIDIC](http://www.edrdg.org/wiki/index.php/KANJIDIC_Project) dictionary
 4. Adding or selecting a field to the selected note types (with a name of your choice)
 5. Filling the new field with the kanji information for every note of the selected note types
 
@@ -38,3 +38,7 @@ E.g. if your target word is `開く` it will add `開 open, unfold, unseal`
 
 If your target word contains multiple kanji, the tool will add information for all of them.
 E.g. if your target word is `高校生` it will add `高 tall, high, expensive<br>校 exam, school, printing, proof, correction<br>生 life, genuine, birth`
+
+## Data licence
+This tool includes an excerpt of [KANJIDIC2](https://www.edrdg.org/edrdg/licence.html) (© Jim Breen & [EDRDG](https://www.edrdg.org/edrdg/licence.html)) in `data/kanjidic2-excerpt.json`.  
+That data is governed by the **[EDRDG Licence](https://www.edrdg.org/edrdg/licence.html)**

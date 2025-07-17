@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'ankI_kanji_add/deck_selector'
+require 'anki_kanji_add/deck_selector'
 
 RSpec.describe AnkiKanjiAdd::DeckSelector do
   let(:anki) do

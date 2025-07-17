@@ -18,6 +18,7 @@ module AnkiKanjiAdd
         length: 100
       )
 
+      # TODO: Prompt for confirmation before updating notes
       puts 'Adding kanji meanings to notes:'
       @filled_note_source_maps.each do |filled_note_source_map|
         @anki.update_note_fields(filled_note_source_map.id, @target, filled_note_source_map.kanji)

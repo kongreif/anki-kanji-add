@@ -1,19 +1,19 @@
 # frozen_string_literal: true
 
 module AnkiKanjiAdd
-  FieldChoice = Struct.new(:source, :target)
-
   class FieldSelector
-    def initialize(anki:, models:)
+    def initialize(anki:, models:, input: $stdin, output: $stdout)
       @anki   = anki
       @models = models
       @model_field_map = {}
+      @in = input
+      @out = output
     end
 
     def choose
       @models.each do |model|
-        puts "Select fields that contains text you want to parse for kanji for note type: #{model}"
-        puts
+        @out.puts "Select fields that contains text you want to parse for kanji for note type: #{model}"
+        @out.puts
         fields = @anki.model_field_names(model)
         print_fields(fields)
         index = select_field_index(fields)
@@ -24,19 +24,19 @@ module AnkiKanjiAdd
 
     def print_fields(fields)
       fields.each_with_index do |f, i|
-        puts "#{i}: #{f}"
-        puts "#{i + 1}: None" if i == fields.length - 1
+        @out.puts "#{i}: #{f}"
+        @out.puts "#{i + 1}: None" if i == fields.length - 1
       end
     end
 
     def select_field_index(fields)
-      index = gets.chomp.to_i
+      index = @in.gets.chomp.to_i
       while index.negative? || index > fields.length
-        puts 'Number out of range, please provide valid number!'
-        puts '------------------------------'
-        index = gets.chomp.to_i
+        @out.puts 'Number out of range, please provide valid number!'
+        @out.puts '------------------------------'
+        index = @in.gets.chomp.to_i
       end
-      puts '------------------------------'
+      @out.puts '------------------------------'
       index
     end
 

@@ -9,6 +9,7 @@ module AnkiKanjiAdd
 
     def extract
       infos = @anki.notes_info(@deck.name)
+
       infos.map { |info| info[:modelName] }.uniq
     end
   end

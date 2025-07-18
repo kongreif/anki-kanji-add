@@ -54,8 +54,8 @@ PLATFORMS
 
 DEPENDENCIES
   rspec
-  rubocop (~> 1.77)
-  rubocop-rspec (~> 3.0)
+  rubocop
+  rubocop-rspec
   ruby-progressbar
 
 BUNDLED WITH

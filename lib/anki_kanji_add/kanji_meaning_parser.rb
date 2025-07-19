@@ -4,9 +4,10 @@ require_relative 'kanji_dictionary'
 
 module AnkiKanjiAdd
   class KanjiMeaningParser
-    def initialize
+    def initialize(output: $stdout)
       @dict = KanjiDictionary.new.entries
       @missing_kanji_meanings = []
+      @out = output
     end
 
     def parse_meaning(note_source_maps)
@@ -37,9 +38,9 @@ module AnkiKanjiAdd
     end
 
     def print_missing_kanji_meanings
-      puts 'No meanings found for following kanji:'
-      puts @missing_kanji_meanings.uniq.join(', ')
-      puts '------------------------------'
+      @out.puts 'No meanings found for following kanji:'
+      @out.puts @missing_kanji_meanings.uniq.join(', ')
+      @out.puts '------------------------------'
     end
   end
 end

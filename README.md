@@ -6,6 +6,10 @@ AnkiKanjiAdd is a command line tool to annotate all of your japanese Anki notes 
 4. Adding or selecting a field to the selected note types (with a name of your choice)
 5. Filling the new field with the kanji information for every note of the selected note types
 
+## Disclaimer
+> [!CAUTION]
+> Using this tool can overwrite data in your anki collection that you don't want to overwrite. Please [create a backup](https://docs.ankiweb.net/backups.html#creating-1) of your collection before using the tool!
+
 ## Installation
 ### Prerequisites
 You have Ruby 3.2+ installed.
